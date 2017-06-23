@@ -1,9 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.PlatformAbstractions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using VersionMonitorNetCore.Models;
 
 
@@ -12,8 +16,12 @@ namespace VersionMonitorNetCore.Services
     /// <summary>
     /// Provides monitoring methods
     /// </summary>
-    internal class MonitoringService
+    internal class MonitoringService : IDisposable
     {
+        private const string EMPTY_VERSION_PLACEHOLDER = "<unknown>";
+        private const string NUGET_URL_PREFIX = "https://api-v2v3search-0.nuget.org/query?q=packageid:";
+        private HttpClient _client = new HttpClient();
+
         /// <summary>
         /// Checks if the services are running (database and optional custom services)
         /// </summary>
@@ -40,12 +48,12 @@ namespace VersionMonitorNetCore.Services
         /// Gets the runtime and modules info
         /// </summary>
         /// <returns></returns>
-        internal dynamic GetModulesInfo()
+        internal async Task<dynamic> GetModulesInfo()
         {
             return new
             {
                 runtime = GetRuntime(),
-                modules = GetModules()
+                modules = await GetModules()
             };
         }
 
@@ -74,12 +82,12 @@ namespace VersionMonitorNetCore.Services
         /// get info about modules
         /// </summary>
         /// <returns></returns>
-        private List<ModuleInfo> GetModules()
+        private async Task<List<ModuleInfo>> GetModules()
         {
             List<ModuleInfo> modules = new List<ModuleInfo>();
             var entryAssembly = Assembly.GetEntryAssembly();
             string entryAssemblyName = entryAssembly.GetName().Name.ToLower();
-            var libraries = DependencyContext.Load(entryAssembly).RuntimeLibraries;
+            var libraries = DependencyContext.Load(entryAssembly).RuntimeLibraries.OrderBy(x => x.Name);
 
             foreach (var library in libraries)
             {
@@ -91,11 +99,37 @@ namespace VersionMonitorNetCore.Services
                 {
                     Name = library.Name,
                     InstalledVersion = library.Version,
-                    NewestVersion = null // todo: newest module version
+                    NewestVersion = await GetNewestModuleVersion(library.Name)
                 });
             }
 
             return modules;
+        }
+
+        private async Task<string> GetNewestModuleVersion(string library)
+        {
+            var response = await _client.GetAsync(NUGET_URL_PREFIX + library);
+            // status code verification
+            response.EnsureSuccessStatusCode();
+            // read response content
+            string stringResponse = await response.Content.ReadAsStringAsync();
+
+            var nugetJson = JsonConvert.DeserializeObject<NugetJson>(stringResponse);
+            if (nugetJson != null && nugetJson.data.Count > 0)
+            {
+                var nugetVersions = nugetJson.data.First().Versions;
+                Version maxVersion = null;
+                foreach (var nugetVersion in nugetVersions)
+                {
+                    Version currentVersion;
+                    if (Version.TryParse(nugetVersion.version, out currentVersion))
+                        maxVersion = (maxVersion == null || currentVersion > maxVersion) ? currentVersion : maxVersion;
+                }
+                if (maxVersion != null)
+                    return maxVersion.ToString();
+            }
+
+            return EMPTY_VERSION_PLACEHOLDER;
         }
 
         #endregion
@@ -122,5 +156,11 @@ namespace VersionMonitorNetCore.Services
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            _client.Dispose();
+            _client = null;
+        }
     }
 }

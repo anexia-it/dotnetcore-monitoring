@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using VersionMonitorNetCore.Services;
 
 namespace VersionMonitorNetCore.Controllers
@@ -39,13 +40,13 @@ namespace VersionMonitorNetCore.Controllers
         /// <returns>json object with runtime and modules infos</returns>
         [HttpGet]
         [Produces("application/json")]
-        public dynamic GetModulesInfo([FromQuery] string access_token)
+        public async Task<dynamic> GetModulesInfo([FromQuery] string access_token)
         {
             var result = CheckAccessToken(access_token);
             if (result != null)
                 return result;
 
-            var info = _service.GetModulesInfo();
+            var info = await _service.GetModulesInfo();
             return new OkObjectResult(info);
         }
 
