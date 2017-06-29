@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.PlatformAbstractions;
 using Newtonsoft.Json;
+using NuGet.Versioning;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,13 @@ namespace VersionMonitorNetCore.Services
     /// </summary>
     internal class MonitoringService : IDisposable
     {
-        private const string EMPTY_VERSION_PLACEHOLDER = "<unknown>";
+        /// <summary>
+        /// Url for querying the nuget packages
+        /// </summary>
         private const string NUGET_URL_PREFIX = "https://api-v2v3search-0.nuget.org/query?q=packageid:";
+        /// <summary>
+        /// Client for calling the nuget-API
+        /// </summary>
         private HttpClient _client = new HttpClient();
 
         /// <summary>
@@ -30,11 +36,13 @@ namespace VersionMonitorNetCore.Services
         {
             StringBuilder builder = new StringBuilder();
 
+            // check if database is running
             if (VersionMonitor.CheckDatabaseFunction == null)
                 builder.AppendLine("Database check is not configured!");
             else
                 builder.AppendLine(String.Format("Database connection: {0}", VersionMonitor.CheckDatabaseFunction() ? "OK" : "NOK"));
 
+            // check if custom services are running
             if (VersionMonitor.CheckCustomServicesFunction != null)
             {
                 foreach (var result in VersionMonitor.CheckCustomServicesFunction())
@@ -65,16 +73,25 @@ namespace VersionMonitorNetCore.Services
         /// <returns></returns>
         private RuntimeInfo GetRuntime()
         {
+            // get current framework and version
             var framework = PlatformServices.Default.Application.RuntimeFramework;
+
+            // try to convert to semantic version
+            string frameworkVersion = framework.Version.ToString();
+            SemanticVersion semanticVersion;
+            SemanticVersion.TryParse(frameworkVersion, out semanticVersion);
+
+            if (semanticVersion != null)
+                frameworkVersion = semanticVersion.ToString();
 
             return new RuntimeInfo
             {
                 // fix value, this application is only used for .NET Core
                 Platform = "dotnetcore",
-                PlatformVersion = framework.Version.ToString(),
+                PlatformVersion = frameworkVersion,
                 Framework = framework.Identifier,
-                FrameworkInstalledVersion = framework.Version.ToString(),
-                FrameworkNewestVersion = null //todo: newest framework version
+                FrameworkInstalledVersion = frameworkVersion,
+                FrameworkNewestVersion = frameworkVersion //todo: newest framework version
             };
         }
 
@@ -95,41 +112,58 @@ namespace VersionMonitorNetCore.Services
                 if (library.Name == entryAssemblyName)
                     continue;
 
+                // try to convert to semantic version
+                string assemblyVersion = library.Version.ToString();
+                SemanticVersion semanticVersion;
+                SemanticVersion.TryParse(assemblyVersion, out semanticVersion);
+
+                if (semanticVersion != null)
+                    assemblyVersion = semanticVersion.ToString();
+
                 modules.Add(new ModuleInfo()
                 {
                     Name = library.Name,
-                    InstalledVersion = library.Version,
-                    NewestVersion = await GetNewestModuleVersion(library.Name)
+                    InstalledVersion = assemblyVersion,
+                    NewestVersion = await GetNewestModuleVersion(library.Name, assemblyVersion)
                 });
             }
 
             return modules;
         }
 
-        private async Task<string> GetNewestModuleVersion(string library)
+        /// <summary>
+        /// Query nuget with package name to get newest version
+        /// </summary>
+        /// <param name="libraryName"></param>
+        /// <param name="installedVersion"></param>
+        /// <returns></returns>
+        private async Task<string> GetNewestModuleVersion(string libraryName, string installedVersion)
         {
-            var response = await _client.GetAsync(NUGET_URL_PREFIX + library);
+            var response = await _client.GetAsync(NUGET_URL_PREFIX + libraryName);
             // status code verification
             response.EnsureSuccessStatusCode();
             // read response content
             string stringResponse = await response.Content.ReadAsStringAsync();
 
+            // convert json to dto
             var nugetJson = JsonConvert.DeserializeObject<NugetJson>(stringResponse);
             if (nugetJson != null && nugetJson.data.Count > 0)
             {
                 var nugetVersions = nugetJson.data.First().Versions;
-                Version maxVersion = null;
+                // try to convert to semantic version
+                SemanticVersion maxVersion = null;
                 foreach (var nugetVersion in nugetVersions)
                 {
-                    Version currentVersion;
-                    if (Version.TryParse(nugetVersion.version, out currentVersion))
+                    // check if a newer version exists
+                    SemanticVersion currentVersion;
+                    if (SemanticVersion.TryParse(nugetVersion.version, out currentVersion))
                         maxVersion = (maxVersion == null || currentVersion > maxVersion) ? currentVersion : maxVersion;
                 }
                 if (maxVersion != null)
                     return maxVersion.ToString();
             }
 
-            return EMPTY_VERSION_PLACEHOLDER;
+            return installedVersion;
         }
 
         #endregion
