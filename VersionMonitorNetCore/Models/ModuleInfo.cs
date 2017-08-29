@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace VersionMonitorNetCore.Models
+namespace Anexia.Monitoring.Models
 {
     /// <summary>
     /// Dto for the module info

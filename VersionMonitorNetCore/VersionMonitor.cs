@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using VersionMonitorNetCore.Models;
+using Anexia.Monitoring.Models;
 
-namespace VersionMonitorNetCore
+namespace Anexia.Monitoring
 {
     /// <summary>
     /// Startpoint for initializing the version monitoring:
@@ -48,7 +48,7 @@ namespace VersionMonitorNetCore
         /// <param name="app">IApplicationBuilder to map routes</param>
         /// <param name="checkDatabaseFunction">function to check if database is running</param>
         /// <param name="checkCustomServicesFunction">function to check if custom services are running</param>
-        public static void RegisterServiceStateMonitor(IApplicationBuilder app, Func<bool> checkDatabaseFunction, Func<List<ServiceState>> checkCustomServicesFunction = null)
+        public static void RegisterServiceStateMonitor(IApplicationBuilder app, Func<bool> checkDatabaseFunction = null, Func<List<ServiceState>> checkCustomServicesFunction = null)
         {
             CheckCustomServicesFunction = checkCustomServicesFunction;
             CheckDatabaseFunction = checkDatabaseFunction;
@@ -74,11 +74,11 @@ namespace VersionMonitorNetCore
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                     "anxruntime",
-                     ("anxapi/v" + GetVersionNumber() + "/modules"),
-                     new { controller = "Monitoring", action = "GetModulesInfo" },
-                     null,
-                     new[] { "VersionMonitorNetCore.Controllers" });
+                     "anxruntime", //route name
+                     ("anxapi/v" + GetVersionNumber() + "/modules"), // template
+                     new { controller = "Monitoring", action = "GetModulesInfo" }, // defaults
+                     null, // constraints
+                     new[] { "VersionMonitorNetCore.Controllers" }); //datatoken
             });
         }
 
@@ -86,7 +86,7 @@ namespace VersionMonitorNetCore
         {
             if (String.IsNullOrWhiteSpace(_assemblyVersion))
             {
-                var version = typeof(VersionMonitorNetCore.VersionMonitor).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+                var version = typeof(Anexia.Monitoring.VersionMonitor).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
                 if (String.IsNullOrWhiteSpace(version))
                     throw new Exception("Failed to get version number for VersionMonitorNetCore assembly!");
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VersionMonitorNetCore.Models
+namespace Anexia.Monitoring.Models
 {
     /// <summary>
     /// Dto for the package json object returned by nuget

@@ -9,10 +9,10 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using VersionMonitorNetCore.Models;
+using Anexia.Monitoring.Models;
 
 
-namespace VersionMonitorNetCore.Services
+namespace Anexia.Monitoring.Services
 {
     /// <summary>
     /// Provides monitoring methods

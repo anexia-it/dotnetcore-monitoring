@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using VersionMonitorNetCore.Attribute;
-using VersionMonitorNetCore.Services;
+using Anexia.Monitoring.Attribute;
+using Anexia.Monitoring.Services;
 
-namespace VersionMonitorNetCore.Controllers
+namespace Anexia.Monitoring.Controllers
 {
     /// <summary>
     /// APIs for version monitoring
