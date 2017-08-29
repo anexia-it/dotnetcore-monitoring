@@ -9,8 +9,8 @@ namespace VersionMonitorNetCore
 {
     /// <summary>
     /// Startpoint for initializing the version monitoring:
-    /// 1) set access token
-    /// 2) register the needed monitoring routes before adding the default MVC routes
+    /// 1) set access token (-> SetAccessToken function)
+    /// 2) register the needed monitoring routes before adding the default MVC routes (RegisterServiceStateMonitor and/or RegisterModulesInfoMonitor function) 
     /// </summary>
     public static class VersionMonitor
     {
@@ -35,7 +35,7 @@ namespace VersionMonitorNetCore
         /// <summary>
         /// Set the access token for the monitoring APIs
         /// </summary>
-        /// <param name="accessToken"></param>
+        /// <param name="accessToken">the token to allow access to the monitoring routes - must be send as query-param with each api-call</param>
         public static void SetAccessToken(string accessToken)
         {
             AccessToken = accessToken;
@@ -43,6 +43,7 @@ namespace VersionMonitorNetCore
 
         /// <summary>
         /// Register route to call service state monitor - make sure this is called before adding mvc default routing
+        /// route: "/anxapi/v[VERSIONMONITOR-VERSION]/up?access_token=[TOKEN]"
         /// </summary>
         /// <param name="app">IApplicationBuilder to map routes</param>
         /// <param name="checkDatabaseFunction">function to check if database is running</param>
@@ -65,6 +66,7 @@ namespace VersionMonitorNetCore
 
         /// <summary>
         /// Register route to call runtime & modules monitor - make sure this is called before adding mvc default routing
+        /// route: "/anxapi/v[VERSIONMONITOR-VERSION]/modules?access_token=[TOKEN]"
         /// </summary>
         /// <param name="app">IApplicationBuilder to map routes</param>
         public static void RegisterModulesInfoMonitor(IApplicationBuilder app)

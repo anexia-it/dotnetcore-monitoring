@@ -34,22 +34,26 @@ namespace VersionMonitorNetCore.Services
         /// <returns></returns>
         internal string GetServiceStates()
         {
-            StringBuilder builder = new StringBuilder();
+            bool success = true;
 
             // check if database is running
-            if (VersionMonitor.CheckDatabaseFunction == null)
-                builder.AppendLine("Database check is not configured!");
-            else
-                builder.AppendLine(String.Format("Database connection: {0}", VersionMonitor.CheckDatabaseFunction() ? "OK" : "NOK"));
+            if (VersionMonitor.CheckDatabaseFunction != null && !VersionMonitor.CheckDatabaseFunction())
+                success = false;
 
             // check if custom services are running
             if (VersionMonitor.CheckCustomServicesFunction != null)
             {
                 foreach (var result in VersionMonitor.CheckCustomServicesFunction())
-                    builder.AppendLine(String.Format("{0}: {1}", result.ServiceName, result.IsRunning ? "OK" : "NOK"));
+                {
+                    if (!result.IsRunning)
+                    {
+                        success = false;
+                        break;
+                    }
+                }
             }
 
-            return builder.ToString();
+            return (success ? "OK" : "NOK");
         }
 
         /// <summary>
