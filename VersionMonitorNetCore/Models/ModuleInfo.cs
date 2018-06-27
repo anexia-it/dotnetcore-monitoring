@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Anexia.Monitoring.Models
 {
@@ -23,5 +24,10 @@ namespace Anexia.Monitoring.Models
         /// </summary>
         [JsonProperty(PropertyName = "newest_version")]
         public string NewestVersion { get; set; }
+        /// <summary>
+        /// List of Licenses
+        /// </summary>
+        [JsonProperty(PropertyName = "licence_urls")]
+        public List<string> Licenses { get; set; }
     }
 }

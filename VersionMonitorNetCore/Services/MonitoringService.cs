@@ -128,7 +128,9 @@ namespace Anexia.Monitoring.Services
                 {
                     Name = library.Name,
                     InstalledVersion = assemblyVersion,
-                    NewestVersion = await GetNewestModuleVersion(library.Name, assemblyVersion)
+                    NewestVersion = await GetNewestModuleVersion(library.Name, assemblyVersion),
+                    //get License
+                    Licenses = (await GetLicense(library.Name, assemblyVersion))
                 });
             }
 
@@ -168,6 +170,26 @@ namespace Anexia.Monitoring.Services
             }
 
             return installedVersion;
+        }
+
+        /// <summary>
+        /// Query nuget with package name to get License
+        /// </summary>
+        /// <param name="libraryName"></param>
+        /// <param name="installedVersion"></param>
+        /// <returns></returns>
+        private async Task<List<string>> GetLicense(string libraryName, string installedVersion)
+        {
+            var response = await _client.GetAsync(NUGET_URL_PREFIX + libraryName);
+            // status code verification
+            response.EnsureSuccessStatusCode();
+            // read response content
+            string stringResponse = await response.Content.ReadAsStringAsync();
+
+            // convert json to dto
+            var nugetJson = JsonConvert.DeserializeObject<NugetJson>(stringResponse);
+
+            return nugetJson != null ? nugetJson.data.Any() ? new List<string> { nugetJson.data[0].licenseUrl } : new List<string>() : new List<string>();
         }
 
         #endregion
