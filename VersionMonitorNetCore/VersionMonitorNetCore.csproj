@@ -2,16 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <Authors>ANEXIA Internetdienstleistungs GmbH</Authors>
     <Company>ANEXIA Internetdienstleistungs GmbH</Company>
     <Description>Tool to monitor dependency and framework versions for .NET Core</Description>
-    <Copyright>Copyright 2017</Copyright>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <Copyright>Copyright (c) 2017 ANEXIA Internetdienstleisungs GmbH</Copyright>
+    <PackageLicenseUrl>https://github.com/anexia-it/anexia-monitoring-dotnetcore/blob/master/LICENSE</PackageLicenseUrl>
     <PackageTags>ANEXIA ANX version monitor dependency library module .NET Core</PackageTags>
     <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/anexia-it/anexia-monitoring-dotnetcore</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
