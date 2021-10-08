@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Threading.Tasks;
 using Anexia.Monitoring;
 using Anexia.Monitoring.Controllers;
@@ -13,8 +12,9 @@ namespace VersionMonitorNetCore.Test.UnitTests.Controllers
 {
     public class MonitoringControllerTests
     {
-        private readonly MonitoringController _monitoringController;
         private readonly string _accestoken;
+        private readonly MonitoringController _monitoringController;
+
         public MonitoringControllerTests()
         {
             _monitoringController = new MonitoringController();
@@ -22,28 +22,24 @@ namespace VersionMonitorNetCore.Test.UnitTests.Controllers
             VersionMonitor.SetAccessToken(_accestoken);
         }
 
-        [Fact()]
+        [Fact]
         public void GetServiceStatesTest()
         {
             var result = _monitoringController.GetServiceStates(_accestoken);
             if (result is OkObjectResult okObjectResult)
-            {
                 Assert.True((string)okObjectResult.Value == "OK");
-            }
             else
-            {
                 Assert.True(false, "Not a OkObjectResult");
-            }
         }
 
-        [Fact()]
+        [Fact]
         public async Task GetModulesInfoTest()
         {
             var result = await _monitoringController.GetModulesInfo(_accestoken);
             if (result is OkObjectResult okObjectResult)
             {
-                object val = okObjectResult.Value.GetType().GetProperty("runtime")?.GetValue(okObjectResult.Value, null);
-                if(val is RuntimeInfo runtimeInfoValue)
+                var val = okObjectResult.Value.GetType().GetProperty("runtime")?.GetValue(okObjectResult.Value, null);
+                if (val is RuntimeInfo runtimeInfoValue)
                 {
                     var frameWorkVersion = PlatformServices.Default.Application.RuntimeFramework;
                     Assert.True(frameWorkVersion.Version.ToString() == runtimeInfoValue.FrameworkInstalledVersion,
@@ -55,15 +51,10 @@ namespace VersionMonitorNetCore.Test.UnitTests.Controllers
                 }
 
                 val = okObjectResult.Value.GetType().GetProperty("modules")?.GetValue(okObjectResult.Value, null);
-                if(val is List<ModuleInfo> listModuleInfo)
-                {
+                if (val is List<ModuleInfo> listModuleInfo)
                     Assert.NotEmpty(listModuleInfo);
-                }
                 else
-                {
                     Assert.True(false, "List module info is not existing");
-                }
-
             }
             else
             {

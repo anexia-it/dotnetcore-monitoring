@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionMonitorNetCore", "VersionMonitorNetCore\VersionMonitorNetCore.csproj", "{1BEFE893-B225-4625-974A-631D49E9F98B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VersionMonitorNetCore", "VersionMonitorNetCore\VersionMonitorNetCore.csproj", "{1BEFE893-B225-4625-974A-631D49E9F98B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersionMonitorNetCore.Test", "VersionMonitorNetCore.Test\VersionMonitorNetCore.Test.csproj", "{E04D3D45-9458-4D58-BD10-C57E6FBAD658}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VersionMonitorNetCore.Test", "VersionMonitorNetCore.Test\VersionMonitorNetCore.Test.csproj", "{E04D3D45-9458-4D58-BD10-C57E6FBAD658}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{10961D5F-2572-4D51-A126-CC0A4B39208C}"
+	ProjectSection(SolutionItems) = preProject
+		CleanCode\ACIMRules.ruleset = CleanCode\ACIMRules.ruleset
+		CleanCode\stylecop.json = CleanCode\stylecop.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D141EDA1-616F-46AC-B7D0-2E8BDD68771D}
 	EndGlobalSection
 EndGlobal
