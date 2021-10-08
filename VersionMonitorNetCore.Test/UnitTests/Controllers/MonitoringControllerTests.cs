@@ -10,6 +10,8 @@ using Xunit;
 
 namespace VersionMonitorNetCore.Test.UnitTests.Controllers
 {
+	
+    [Trait("Category", "GitHub")]
     public class MonitoringControllerTests
     {
         private readonly string _accestoken;
