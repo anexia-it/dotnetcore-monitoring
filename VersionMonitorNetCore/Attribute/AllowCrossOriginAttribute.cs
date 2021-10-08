@@ -1,15 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Anexia.Monitoring.Attribute
 {
+    /// <summary>
+    ///     Attribute for adding CORS headers
+    /// </summary>
     public class AllowCrossOriginAttribute : ActionFilterAttribute
     {
+        /// <summary>
+        ///     <inheritdoc/>
+        ///     Adds needed headers for allowing cross origin requests.
+        /// </summary>
+        /// <param name="context">The current action executing context.</param>
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            //Add Response Header-Elements
+            // Add Response Header-Elements
             context.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
             context.HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
             context.HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET, OPTIONS");
