@@ -58,14 +58,15 @@ namespace Anexia.Monitoring
             CheckCustomServicesFunction = checkCustomServicesFunction;
             CheckDatabaseFunction = checkDatabaseFunction;
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    "anxservice", // route name
-                    "anxapi/v" + GetVersionNumber() + "/up", // template
-                    new { controller = "Monitoring", action = "GetServiceStates" }, // defaults
-                    null, // constraints
-                    new[] { "VersionMonitorNetCore.Controllers" }); // data token
+                endpoints.MapControllerRoute(
+                   name: "anxservice",
+                   pattern: $"anxapi/v{GetVersionNumber()}/up",
+                   defaults: new { controller = "Monitoring", action = "GetServiceStates" },
+                   dataTokens: new[] { "VersionMonitorNetCore.Controllers" }
+                  );
             });
         }
 
@@ -76,17 +77,21 @@ namespace Anexia.Monitoring
         /// <param name="app">IApplicationBuilder to map routes.</param>
         public static void RegisterModulesInfoMonitor(IApplicationBuilder app)
         {
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    "anxruntime", // route name
-                    "anxapi/v" + GetVersionNumber() + "/modules", // template
-                    new { controller = "Monitoring", action = "GetModulesInfo" }, // defaults
-                    null, // constraints
-                    new[] { "VersionMonitorNetCore.Controllers" }); // data token
-            });
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllerRoute(
+                         name: "anxruntime",
+                         pattern: $"anxapi/v{GetVersionNumber()}/modules",
+                         defaults: new { controller = "Monitoring", action = "GetModulesInfo" },
+                         dataTokens: new[] { "VersionMonitorNetCore.Controllers" }
+                        );
+                });
         }
 
+        /// <summary>
+        ///     Get version number via reflection
+        /// </summary>
         private static string GetVersionNumber()
         {
             if (!string.IsNullOrWhiteSpace(_assemblyVersion))
