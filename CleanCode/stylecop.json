@@ -1,10 +1,6 @@
 ﻿{
   "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
   "settings": {
-    "documentationRules": {
-      "companyName": "ANEXIA® Internetdienstleistungs GmbH",
-      "headerDecoration": "------------------------------------------------------------------------------------------"
-    },
     "orderingRules": {
       "usingDirectivesPlacement": "outsideNamespace",
       "blankLinesBetweenUsingGroups": "omit"
@@ -12,11 +8,11 @@
     "maintainabilityRules": {
       "topLevelTypes": [
         "class",
-        "interface" 
+        "interface"
       ]
     },
     "layoutRules": {
-      "newlineAtEndOfFile": "omit" 
+      "newlineAtEndOfFile": "omit"
     },
     "namingRules": {
       "allowedHungarianPrefixes": [

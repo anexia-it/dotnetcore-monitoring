@@ -1,36 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <Authors>ANEXIA Internetdienstleistungs GmbH</Authors>
-    <Company>ANEXIA Internetdienstleistungs GmbH</Company>
-    <Description>Tool to monitor dependency and framework versions for .NET Core</Description>
-    <Copyright>Copyright (c) 2017 ANEXIA Internetdienstleisungs GmbH</Copyright>
-    <PackageLicenseUrl>https://github.com/anexia-it/anexia-monitoring-dotnetcore/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageTags>ANEXIA ANX version monitor dependency library module .NET Core</PackageTags>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/anexia-it/anexia-monitoring-dotnetcore</PackageProjectUrl>
-    <CodeAnalysisRuleSet>..\CleanCode\ACIMRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp1.1</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+        <Authors>ANEXIA Internetdienstleistungs GmbH</Authors>
+        <Company>ANEXIA Internetdienstleistungs GmbH</Company>
+        <Description>Tool to monitor dependency and framework versions for .NET Core</Description>
+        <Copyright>Copyright (c) 2017 ANEXIA Internetdienstleisungs GmbH</Copyright>
+        <PackageLicenseUrl>https://github.com/anexia-it/anexia-monitoring-dotnetcore/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageTags>ANEXIA ANX version monitor dependency library module .NET Core</PackageTags>
+        <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+        <PackageProjectUrl>https://github.com/anexia-it/anexia-monitoring-dotnetcore</PackageProjectUrl>
+        <CodeAnalysisRuleSet>..\CleanCode\ACIMRules.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.1" />
-    <PackageReference Include="NuGet.Versioning" Version="4.0.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <AdditionalFiles Include="..\CleanCode\stylecop.json" Link="stylecop.json" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.1"/>
+        <PackageReference Include="NuGet.Versioning" Version="4.0.0"/>
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <AdditionalFiles Include="..\CleanCode\stylecop.json" Link="stylecop.json"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update="application.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="application.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
 </Project>
