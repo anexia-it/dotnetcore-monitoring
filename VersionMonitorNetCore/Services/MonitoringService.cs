@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Anexia.Monitoring.Models;
 using Microsoft.Extensions.DependencyModel;
@@ -122,24 +123,28 @@ namespace Anexia.Monitoring.Services
                     continue;
                 }
 
-                // try to convert to semantic version
-                var assemblyVersion = library.Version;
-                SemanticVersion.TryParse(assemblyVersion, out var semanticVersion);
-
-                if (semanticVersion != null)
+                if (!VersionMonitor.BlackList.Exists(x => Regex.Match(library.Name, x).Success)
+                    && !VersionMonitor.AdditionalBlackList.Exists(x => Regex.Match(library.Name, x).Success))
                 {
-                    assemblyVersion = semanticVersion.ToString();
+                    // try to convert to semantic version
+                    var assemblyVersion = library.Version;
+                    SemanticVersion.TryParse(assemblyVersion, out var semanticVersion);
+
+                    if (semanticVersion != null)
+                    {
+                        assemblyVersion = semanticVersion.ToString();
+                    }
+
+                    modules.Add(new ModuleInfo
+                    {
+                        Name = library.Name,
+                        InstalledVersion = assemblyVersion,
+                        NewestVersion = await GetNewestModuleVersion(library.Name, assemblyVersion),
+
+                        // get License
+                        Licenses = await GetLicense(library.Name)
+                    });
                 }
-
-                modules.Add(new ModuleInfo
-                {
-                    Name = library.Name,
-                    InstalledVersion = assemblyVersion,
-                    NewestVersion = await GetNewestModuleVersion(library.Name, assemblyVersion),
-
-                    // get License
-                    Licenses = await GetLicense(library.Name)
-                });
             }
 
             return modules;
