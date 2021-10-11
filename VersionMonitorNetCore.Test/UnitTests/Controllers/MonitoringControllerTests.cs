@@ -29,9 +29,13 @@ namespace VersionMonitorNetCore.Test.UnitTests.Controllers
         {
             var result = _monitoringController.GetServiceStates(_accestoken);
             if (result is OkObjectResult okObjectResult)
+            {
                 Assert.True((string)okObjectResult.Value == "OK");
+            }
             else
+            {
                 Assert.True(false, "Not a OkObjectResult");
+            }
         }
 
         [Fact]
@@ -44,7 +48,8 @@ namespace VersionMonitorNetCore.Test.UnitTests.Controllers
                 if (val is RuntimeInfo runtimeInfoValue)
                 {
                     var frameWorkVersion = PlatformServices.Default.Application.RuntimeFramework;
-                    Assert.True(frameWorkVersion.Version.ToString() == runtimeInfoValue.FrameworkInstalledVersion,
+                    Assert.True(
+                        frameWorkVersion.Version.ToString() == runtimeInfoValue.FrameworkInstalledVersion,
                         "Not a Actual version");
                 }
                 else
@@ -54,9 +59,13 @@ namespace VersionMonitorNetCore.Test.UnitTests.Controllers
 
                 val = okObjectResult.Value.GetType().GetProperty("modules")?.GetValue(okObjectResult.Value, null);
                 if (val is List<ModuleInfo> listModuleInfo)
+                {
                     Assert.NotEmpty(listModuleInfo);
+                }
                 else
+                {
                     Assert.True(false, "List module info is not existing");
+                }
             }
             else
             {
