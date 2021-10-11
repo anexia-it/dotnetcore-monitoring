@@ -6,14 +6,42 @@ Package to monitor dependency and framework versions for .NET Core Frameworks. I
 
 Install the package via NuGet: "VersionMonitorNetCore"
 
-Set Access Token and register monitoring routes before adding the default routes in Startup.cs:
+Set Access Token and register monitoring routes at the end of Configure-Method in Startup.cs:
 
 		...        
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            ...
             Anexia.Monitoring.VersionMonitor.SetAccessToken("custom_access_token");
             Anexia.Monitoring.VersionMonitor.RegisterServiceStateMonitor(app, () => true);
             Anexia.Monitoring.VersionMonitor.RegisterModulesInfoMonitor(app);
+        }
+		...
+
+You can configure blacklist-modules (by regular expressions) wich will be excluded in result-list.
+By default there are three blacklist-regex-configurations done:
+- ^[App_Web]
+- ^[CompiledRazorTemplates]
+- ^[System.]
+
+You can override the default-blacklist by
+
+		...        
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            ...
+            Anexia.Monitoring.VersionMonitor.SetBlackList(new List<string>(){ "your_regex" });
+            ...
+        }
+		...
+
+Also you can extend the existing blacklist by
+
+		...        
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            ...
+            Anexia.Monitoring.VersionMonitor.SetAdditionalBlackList(new List<string>(){ "your_regex" });
             ...
         }
 		...

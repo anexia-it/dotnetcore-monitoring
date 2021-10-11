@@ -25,7 +25,7 @@ namespace Anexia.Monitoring.Controllers
         /// <summary>
         ///     Get info about state of services (database etc.)
         /// </summary>
-        /// <param name="accessToken">
+        /// <param name="access_token">
         ///     the token to allow access to the monitoring routes - must be send as query-param with each
         ///     api-call
         /// </param>
@@ -33,16 +33,16 @@ namespace Anexia.Monitoring.Controllers
         [HttpGet]
         [Produces("text/plain")]
         [AllowCrossOrigin]
-        public dynamic GetServiceStates([FromQuery] string accessToken)
+        public dynamic GetServiceStates([FromQuery] string access_token)
         {
-            var result = CheckAccessToken(accessToken);
+            var result = CheckAccessToken(access_token);
             return result != null ? result : new OkObjectResult(_service.GetServiceStates());
         }
 
         /// <summary>
         ///     Get version-info about runtime and modules
         /// </summary>
-        /// <param name="accessToken">
+        /// <param name="access_token">
         ///     the token to allow access to the monitoring routes - must be send as query-param with each
         ///     api-call
         /// </param>
@@ -50,9 +50,9 @@ namespace Anexia.Monitoring.Controllers
         [HttpGet]
         [Produces("application/json")]
         [AllowCrossOrigin]
-        public async Task<dynamic> GetModulesInfo([FromQuery] string accessToken)
+        public async Task<dynamic> GetModulesInfo([FromQuery] string access_token)
         {
-            var result = CheckAccessToken(accessToken);
+            var result = CheckAccessToken(access_token);
             if (result != null)
             {
                 return result;
