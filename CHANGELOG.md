@@ -16,14 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - assist .NET 5.0
 
 ### Breaking Changes
-- 
+- registration of monitoring routes must be occured at the end of Configure-method now!
 
 ### Bug Fixes
 - .NET Framework version now given correct
-
-### Changed
-- 
-
-### Known Issues
-- 
-- 
