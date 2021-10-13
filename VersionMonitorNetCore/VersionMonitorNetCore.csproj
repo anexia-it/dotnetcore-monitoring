@@ -14,6 +14,7 @@
     <PackageReleaseNotes>Initial release</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/anexia-it/anexia-monitoring-dotnetcore</PackageProjectUrl>
     <CodeAnalysisRuleSet>..\CleanCode\ACIMRules.ruleset</CodeAnalysisRuleSet>
+    <PackageVersion>2.0.0</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,7 +29,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <AdditionalFiles Include="..\CleanCode\stylecop.json" Link="stylecop.json"/>
+    <AdditionalFiles Include="..\CleanCode\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
     <ItemGroup>
